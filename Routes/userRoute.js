@@ -60,21 +60,27 @@ userRoutes.post("/login",async(req,res)=>{
 
 })
 
-userRoutes.patch("/applied",async(req,res)=>{
-    const {id}=req.params
+userRoutes.patch("/applied/:id", async (req, res) => {
+    const { id } = req.params;
+  
     try {
-        const user=await userModel.findone({_id:id})
-        if(user){
-            user.applied.push(req.body)
-            await user.save()
-            res.status(200).json({message:"Applied successfully"})
+      const user = await userModel.findOne({ _id: id })
+  
+      if (user) {
+        if (!req.body || Object.keys(req.body).length === 0) {
+          return res.status(400).json({ message: "Invalid data" });
         }
-        else{
-            res.status(400).json({message:"User not found"})
-        }
+  
+        user.applied.push(req.body); 
+        await user.save();
+  
+        res.status(200).json({ message: "Applied successfully" });
+      } else {
+        res.status(404).json({ message: "User not found" }); 
+      }
     } catch (error) {
-        res.status(500).json({ message: "Error applying" });
-        
+      
+      res.status(500).json({ message: "Error applying", error: error.message }); 
     }
-})
+  });
 module.exports=userRoutes
