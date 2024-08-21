@@ -4,7 +4,8 @@ const authMiddleware = require("../authMiddleware")
 
 const JobRoutes=express.Router()
 
-JobRoutes.post("/AddJob" ,authMiddleware,async(req,res)=>{
+
+JobRoutes.post("/AddJob",async(req,res)=>{
   try {
     const Job=new jobModle(req.body)
     await Job.save()
@@ -17,7 +18,7 @@ JobRoutes.post("/AddJob" ,authMiddleware,async(req,res)=>{
   }
 
 })
-JobRoutes.get("/getdata",authMiddleware,async(req,res)=>{
+JobRoutes.get("/getdata",async(req,res)=>{
  try {
   const Job=await jobModle.find()
   res.status(200).json(Job)
