@@ -20,7 +20,7 @@ userRoutes.post("/signup", async (req, res) => {
         
         const role = email.endsWith('@alphaware.com') ? 'admin' : 'user';
 
-        const user = new userModel({ name, email, password: hash, role });
+        const user = new userModel({ name, email, password: hash, role,applied:[] });
 
         await user.save();
 
@@ -60,4 +60,21 @@ userRoutes.post("/login",async(req,res)=>{
 
 })
 
+userRoutes.patch("/applied",async(req,res)=>{
+    const {id}=req.params
+    try {
+        const user=await userModel.findone({_id:id})
+        if(user){
+            user.applied.push(req.body)
+            await user.save()
+            res.status(200).json({message:"Applied successfully"})
+        }
+        else{
+            res.status(400).json({message:"User not found"})
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error applying" });
+        
+    }
+})
 module.exports=userRoutes
