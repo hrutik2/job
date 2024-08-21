@@ -3,7 +3,7 @@ const jobModle = require("../Model/jobModle")
 const authMiddleware = require("../authMiddleware")
 
 const JobRoutes=express.Router()
-
+ JobRoutes.use(authMiddleware)
 
 JobRoutes.post("/AddJob",async(req,res)=>{
   try {
