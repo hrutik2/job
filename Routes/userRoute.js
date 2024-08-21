@@ -2,6 +2,7 @@ const express=require("express");
 const userModel = require("../Model/userModel");
 const bcrypt=require("bcryptjs")
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../authMiddleware");
 require("dotenv").config()
 const userRoutes=express.Router()
 
@@ -60,7 +61,7 @@ userRoutes.post("/login",async(req,res)=>{
 
 })
 
-userRoutes.patch("/applied/:id", async (req, res) => {
+userRoutes.patch("/applied/:id",authMiddleware, async (req, res) => {
     const { id } = req.params;
   
     try {
@@ -83,4 +84,19 @@ userRoutes.patch("/applied/:id", async (req, res) => {
       res.status(500).json({ message: "Error applying", error: error.message }); 
     }
   });
+userRoutes.get("/get/:id",async(req,res)=>{
+    try{
+        const user = await userModel.findOne({ _id: req.params.id })
+        if(user){
+            res.status(200).json(user)
+        }
+        else{
+            res.status(404).json({ message: "User not found" }); 
+        }
+    }
+    catch (error) {
+      
+        res.status(500).json({ message: "Error applying", error: error.message }); 
+      }
+})
 module.exports=userRoutes
