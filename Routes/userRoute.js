@@ -39,7 +39,7 @@ userRoutes.post("/login",async(req,res)=>{
         bcrypt.compare(password, User.password, function(err, result) {
            if(result){
             const token = jwt.sign({ id: User._id, role: User.role },process.env.secretkey)
-            res.status(200).json({ token, message: "user login succesful",role:User.role });
+            res.status(200).json({ token, message: "user login succesful",role:User.role,id:User._id });
            }
            else{
             res.status(200).json({message: "enter correct password"})
